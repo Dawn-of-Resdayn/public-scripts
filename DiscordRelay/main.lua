@@ -141,13 +141,6 @@ function DiscordRelay.OnServerPostInit()
     tes3mp.LogMessage(enumerations.log.INFO, "[DISCORD-RELAY]: DiscordRelay loaded (through scriptHook)")
 end
 
-function DiscordRelay.loginHandler(eventStatus, pid)
-  local botName = DiscordRelay.config.discord.botUsername
-  local message = "Player "..Players[pid].name.."("..pid..") as joined the server."
-
-  DiscordRelay.DiscordSendMessage(botName, message, "con")
-end
-
 customEventHooks.registerValidator("OnPlayerSendMessage", DiscordRelay.OnPlayerSendMessage)
 customEventHooks.registerHandler("OnServerPostInit", DiscordRelay.OnServerPostInit)
 customEventHooks.registerHandler("OnServerPostInit", DiscordRelay.Discord_PingTest)
@@ -155,19 +148,19 @@ customEventHooks.registerHandler("OnPlayerDisconnect", function(eventStatus, pid
   local playerName = logicHandler.GetChatName(pid)
   local botName = DiscordRelay.config.discord.botUsername
   --local message = "Player "..playerName.."("..pid..") as left the server."
-  local message = "Player ID "..pid.." as left the server."
+  local message = "Player ID "..pid.." has left the server."
 
   DiscordRelay.DiscordSendMessage(botName, message, "con")
 end)
 customEventHooks.registerHandler("OnPlayerFinishLogin", function(eventStatus, pid)
   local botName = DiscordRelay.config.discord.botUsername
-  local message = "Player "..Players[pid].name.."("..pid..") as logged into the server."
+  local message = "Player "..Players[pid].name.."("..pid..") has logged into the server."
 
   DiscordRelay.DiscordSendMessage(botName, message, "con")
 end)
 customEventHooks.registerHandler("OnPlayerEndCharGen", function(eventStatus, pid)
   local botName = DiscordRelay.config.discord.botUsername
-  local message = "Player "..Players[pid].name.."("..pid..") as finished creating their character."
+  local message = "Player "..Players[pid].name.."("..pid..") has finished creating their character."
 
   DiscordRelay.DiscordSendMessage(botName, message, "con")
 end)
