@@ -1,0 +1,3 @@
+Script is severely outdated, and needs updating to 0.7.0
+It's functionality and history is here though so we don't have to make it from scratch.
+- Credit to ReinhartXIV.
