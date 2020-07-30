@@ -184,9 +184,11 @@ function rpchat.log(message, logType)
 	end
 end
 
-function rpchat.systemMessage(pid, message)
-	message = color.Cyan .. "[RP-CHAT]: " .. color.White .. message .. "\n"
-	tes3mp.SendMessage(pid, message, false)
+function rpchat.systemMessage(pid, message, all)
+	local all = all or false
+	local message = color.Cyan .. "[RP-CHAT]: " .. color.White .. message .. "\n"
+
+	tes3mp.SendMessage(pid, message, all)
 end
 
 function rpchat.commandHandler(pid, cmd)
@@ -222,11 +224,14 @@ function rpchat.commandHandler(pid, cmd)
 			else
 				rpchat.systemMessage(pid, "Invalid PID.")
 			end
+
 		elseif cmd[2] == "toggleooc" and Players[pid].data.settings.staffRank > 0 then
 			if cmd[3] == "false" then
 				config.toggleOOC = false
+				rpchat.systemMessage(pid, "OOC has been turned off by staff.", true)
 			elseif cmd[3] == "true" then
 				config.toggleOOC = true
+				rpchat.systemMessage(pid, "OOC has been turned on by staff.", true)
 			else
 				rpchat.systemMessage(pid, "Argument has to be true/false. (OOC is set to "..config.toggleOOC..")")
 			end
@@ -243,7 +248,7 @@ end
 function rpchat.nickname(pid, cmd)
 	local nick = ""
 
-	if rpconfig.enableNicks == true then
+	if rpconfig.enableNicks then
 		if cmd[2] ~= nil then
 			for index, value in pairs(cmd) do
 				if index > 1 and index <= 2 then
@@ -270,7 +275,7 @@ function rpchat.nickname(pid, cmd)
 end
 
 function rpchat.ooc(pid, cmd)
-	if not config.toggleOOC and not Players[pid]:IsServerStaff() then
+	if not config.toggleOOC and not Players[pid].data.settings.staffRank > 0 then
 		rpchat.systemMessage(pid, "OOC has been disabled by staff.")
 		return
 	end
@@ -287,7 +292,7 @@ function rpchat.ooc(pid, cmd)
 		end
 		rpchat.messageHandler(pid, message, "ooc")
 	else
-		tes3mp.SendMessage(pid, "[RP-CHAT]: That's not a valid message.\n", false)
+		rpchat.systemMessage(pid, "That's not a valid message.")
 	end
 end
 
@@ -304,7 +309,7 @@ function rpchat.looc(pid, cmd)
 		end
 		rpchat.messageHandler(pid, message, "looc")
 	else
-		tes3mp.SendMessage(pid, "[RP-CHAT]: That's not a valid message.\n", false)
+		rpchat.systemMessage(pid, "That's not a valid message.")
 	end
 end
 
@@ -321,7 +326,7 @@ function rpchat.emote(pid, cmd)
 		end
 		rpchat.messageHandler(pid, message, "emote")
 	else
-		tes3mp.SendMessage(pid, "[RP-CHAT]: That's not a valid message.\n", false)
+		rpchat.systemMessage(pid, "That's not a valid message.")
 	end
 end
 
@@ -338,7 +343,7 @@ function rpchat.shout(pid, cmd)
 		end
 		rpchat.messageHandler(pid, message, "shout")
 	else
-		tes3mp.SendMessage(pid, "[RP-CHAT]: That's not a valid message.\n", false)
+		rpchat.systemMessage(pid, "That's not a valid message.")
 	end
 end
 
@@ -355,7 +360,7 @@ function rpchat.whisper(pid, cmd)
 		end
 		rpchat.messageHandler(pid, message, "whisper")
 	else
-		tes3mp.SendMessage(pid, "[RP-CHAT]: That's not a valid message.\n", false)
+		rpchat.systemMessage(pid, "That's not a valid message.")
 	end
 end
 
