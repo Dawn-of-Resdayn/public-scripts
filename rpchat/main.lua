@@ -275,7 +275,7 @@ function rpchat.nickname(pid, cmd)
 end
 
 function rpchat.ooc(pid, cmd)
-	if not config.toggleOOC and not Players[pid].data.settings.staffRank > 0 then
+	if not config.toggleOOC and Players[pid].data.settings.staffRank > 0 then
 		rpchat.systemMessage(pid, "OOC has been disabled by staff.")
 		return
 	end
