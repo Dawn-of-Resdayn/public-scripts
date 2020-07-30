@@ -11,6 +11,7 @@ These are a list of open-source scripts that are in server.\
 * jrpStatus - ``Created by jrp malic - https://gitlab.com/rendeko/tes3mp-scripts`` - ``Active``
 * kanaHousing - ``Created by Atkana - https://github.com/Atkana/tes3mp-scripts`` - ``Active``
 * kanaFurniture - ``Created by Atkana - https://github.com/Atkana/tes3mp-scripts`` - ``Active``
+* kanaHousing - ``Created by Atkana - https://github.com/Atkana/tes3mp-scripts`` - ``Active``
 * mysqlHandler - ``Created by Nac - https://github.com/nalal`` - ``In-Active``
 * rpRolls - ``Created by David-AW - https://github.com/David-AW`` - ``Active``
 * stuck - ``Created by Nac - https://github.com/nalal`` - ``Active``
