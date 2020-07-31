@@ -7,15 +7,16 @@ These are a list of open-source scripts that are in server.\
 * basicCrafting - ``Created by Nac - https://github.com/nalal ?`` - ``In-Active``
 * betterBans - ``Created by Nac - https://github.com/nalal`` - ``In-Active``
 * brewingMod - ``Created by ReinhartXIV`` - ``In-Active``
+* mysqlHandler - ``Created by Nac - https://github.com/nalal`` - ``In-Active``
 * FossMail - ``Created by TeamFoss - https://github.com/TES3MP-TeamFOSS/Scripts`` - ``Active``
 * jrpStatus - ``Created by jrp malic - https://gitlab.com/rendeko/tes3mp-scripts`` - ``Active``
 * kanaHousing - ``Created by Atkana - https://github.com/Atkana/tes3mp-scripts`` - ``Active``
 * kanaFurniture - ``Created by Atkana - https://github.com/Atkana/tes3mp-scripts`` - ``Active``
 * cellReset - ``Created by Atkana - https://github.com/Atkana/tes3mp-scripts`` - ``Active``
-* mysqlHandler - ``Created by Nac - https://github.com/nalal`` - ``In-Active``
 * rpRolls - ``Created by David-AW - https://github.com/David-AW`` - ``Active``
 * stuck - ``Created by Nac - https://github.com/nalal`` - ``Active``
 * DiscordRelay - ``Created by Hotaru - https://github.com/HotaruBlaze/TES3MP_DiscordRelay`` - ``Active``
+* objectBlacklist - ``Created by SaintWish - https://github.com/SaintWish`` - ``Active``
 
 Modified
 ======
