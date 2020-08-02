@@ -3,7 +3,7 @@ local rpconfig = {}
 rpconfig.debug = true
 rpconfig.dataType = "json"
 
-rpconfig.toggleOOC = true
+rpconfig.toggleOOC = false
 
 rpconfig.enableNicks = true
 rpconfig.nickMinLen = 3
@@ -21,10 +21,6 @@ rpconfig.colors = {
 	shout = color.Orange,
 	whisper = color.Grey,
 	nickname = color.Grey
-}
-
-rpconfig.fileNames = {
-	rpdata = "usersStore"
 }
 
 return rpconfig

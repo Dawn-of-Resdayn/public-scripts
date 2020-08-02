@@ -227,13 +227,13 @@ function rpchat.commandHandler(pid, cmd)
 
 		elseif cmd[2] == "toggleooc" and Players[pid].data.settings.staffRank > 0 then
 			if cmd[3] == "false" then
-				config.toggleOOC = false
+				rpconfig.toggleOOC = false
 				rpchat.systemMessage(pid, "OOC has been turned off by staff.", true)
 			elseif cmd[3] == "true" then
-				config.toggleOOC = true
+				rpconfig.toggleOOC = true
 				rpchat.systemMessage(pid, "OOC has been turned on by staff.", true)
 			else
-				rpchat.systemMessage(pid, "Argument has to be true/false. (OOC is set to "..config.toggleOOC..")")
+				rpchat.systemMessage(pid, "Argument has to be true/false. (OOC is set to "..tostring(rpconfig.toggleOOC)..")")
 			end
 
 		else
@@ -275,7 +275,7 @@ function rpchat.nickname(pid, cmd)
 end
 
 function rpchat.ooc(pid, cmd)
-	if not config.toggleOOC and Players[pid].data.settings.staffRank > 0 then
+	if rpconfig.toggleOOC == false and Players[pid].data.settings.staffRank <= 0 then
 		rpchat.systemMessage(pid, "OOC has been disabled by staff.")
 		return
 	end
