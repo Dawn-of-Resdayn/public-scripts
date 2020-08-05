@@ -14,6 +14,34 @@ function rpchat.initPlayer(pid)
 	end
 end
 
+function rpchat.log(logType, message, ...)
+	local message = string.format(message, ...)
+
+	if logType == nil or logType == "normal" then
+		message = "[RP-CHAT]: " .. message
+		tes3mp.LogMessage(enumerations.log.INFO, message)
+	elseif logType == "error" then
+		message = "[RP-CHAT]ERR: " .. message
+		tes3mp.LogMessage(enumerations.log.INFO, message)
+	elseif logType == "warning" then
+		message = "[RP-CHAT]WARN: " .. message
+		tes3mp.LogMessage(enumerations.log.INFO, message)
+	elseif logType == "notice" then
+		message = "[RP-CHAT]NOTE: " .. message
+		tes3mp.LogMessage(enumerations.log.INFO, message)
+	elseif logType == "debug" then
+		if rpconfig.debug then
+			message = "[RP-CHAT]DBG: " .. message
+			tes3mp.LogMessage(enumerations.log.INFO, message)
+		end
+
+	else
+		rpchat.log("INVALID LOG CALL", "error")
+		message = "[RP-CHAT](invalid): " .. message
+		tes3mp.LogMessage(enumerations.log.INFO, message)
+	end
+end
+
 function rpchat.format(message)
 	message = message:gsub("^%l", string.upper)
 	local stringLength = string.len(message)
@@ -36,7 +64,7 @@ end
 
 function rpchat.correctName(playerName)
 	playerName = playerName:gsub("^%l", string.upper)
-	rpchat.log("Name " .. playerName .. " corrected.", "debug")
+	rpchat.log("debug", "Name %s has been corrected.", playerName)
 	return playerName
 end
 
@@ -58,7 +86,7 @@ function rpchat.setColor(pid, newColor, originPID)
 		newColor = "#" .. newColor
 
 		Players[pid].data.customVariables.rpchat.color = newColor
-		rpchat.log("COLOR FOR " .. name .. " CHANGED TO " .. newColor, "debug")
+		rpchat.log("debug", "COLOR FOR %s CHANGED TO %s", name, tostring(newColor))
 	else
 		rpchat.systemMessage(originPID, "Invalid color, please use hex color codes.")
 	end
@@ -74,7 +102,7 @@ function rpchat.setName(pid, newName, originPID)
 
 	Players[pid].data.customVariables.rpchat.name = newName
 
-	rpchat.systemMessage(originPID, "RP name for PID " .. pid .. " changed to " .. newName)
+	rpchat.systemMessage(originPID, "RP name for PID %i changed to %s", pid, newName)
 end
 
 function rpchat.getName(pid, rp)
@@ -127,8 +155,8 @@ function rpchat.messageHandler(pid, message, messageType)
 	if pColor == nil then pColor = color.White end
 	if not messageType then messageType = "local" end
 
-	rpchat.log("PLAYER COLOR IS " .. pColor, "debug")
-	rpchat.log(Players[pid].name.."("..rpchat.getName(pid).."): "..message.." - "..messageType)
+	rpchat.log("debug", "PLAYER COLOR IS %s", tostring(pColor))
+	rpchat.log("normal", "%s(%s): %s - %s", Players[pid].name, rpchat.getName(pid), message, messageType)
 	messageHandlers[messageType](pid, message, pColor)
 end
 
@@ -144,7 +172,7 @@ function rpchat.localMessageDist(pid, message, dist)
 	originX = tes3mp.GetPosX(pid)
 	originY = tes3mp.GetPosY(pid)
 
-	rpchat.log("PLAYER POSITION IS " .. originX .. " " .. originY, "debug")
+	rpchat.log("debug", "PLAYER POSITION IS %f, %f", originX, originY)
 
 	for ply,val in pairs(Players) do
 		if tes3mp.GetCell(ply) == tes3mp.GetCell(pid) then
@@ -160,35 +188,20 @@ function rpchat.localMessageDist(pid, message, dist)
 	end
 end
 
-function rpchat.log(message, logType)
-	if logType == nil or logType == "normal" then
-		message = "[RP-CHAT]: " .. message
-		tes3mp.LogMessage(enumerations.log.INFO, message)
-	elseif logType == "error" then
-		message = "[RP-CHAT]ERR: " .. message
-		tes3mp.LogMessage(enumerations.log.INFO, message)
-	elseif logType == "warning" then
-		message = "[RP-CHAT]WARN: " .. message
-		tes3mp.LogMessage(enumerations.log.INFO, message)
-	elseif logType == "notice" then
-		message = "[RP-CHAT]NOTE: " .. message
-		tes3mp.LogMessage(enumerations.log.INFO, message)
-	elseif logType == "debug" and rpconfig.debug then
-		message = "[RP-CHAT]DBG: " .. message
-		tes3mp.LogMessage(enumerations.log.INFO, message)
+function rpchat.systemMessage(pid, message, ...)
+	local msg = string.format(message, ...)
+	local fMsg = color.Cyan .. "[RP-CHAT]: " .. color.White .. msg .. "\n"
+	rpchat.log("debug", "MESSAGE FORMATTED %s", msg)
 
-	else
-		rpchat.log("INVALID LOG CALL", "error")
-		message = "[RP-CHAT](invalid): " .. message
-		tes3mp.LogMessage(enumerations.log.INFO, message)
-	end
+	tes3mp.SendMessage(pid, fMsg, false)
 end
 
-function rpchat.systemMessage(pid, message, all)
-	local all = all or false
-	local message = color.Cyan .. "[RP-CHAT]: " .. color.White .. message .. "\n"
+function rpchat.globalMessage(pid, message, ...)
+	local msg = string.format(message, ...)
+	local fMsg = color.Cyan .. "[RP-CHAT]: " .. color.White .. msg .. "\n"
+	rpchat.log("debug", "MESSAGE FORMATTED %s", msg)
 
-	tes3mp.SendMessage(pid, message, all)
+	tes3mp.SendMessage(pid, fMsg, true)
 end
 
 function rpchat.commandHandler(pid, cmd)
@@ -207,7 +220,7 @@ function rpchat.commandHandler(pid, cmd)
 				if newName:len() <= rpconfig.nameMaxLen then
 					rpchat.setName(pid, newName, pid)
 				else
-					rpchat.systemMessage(pid, "The max len allowed for a RP name is " .. rpconfig.nameMaxLen)
+					rpchat.systemMessage(pid, "The max len allowed for a RP name is %i", rpconfig.nameMaxLen)
 				end
 			else
 				rpchat.systemMessage(pid, "Invalid name.")
@@ -216,10 +229,15 @@ function rpchat.commandHandler(pid, cmd)
 		elseif cmd[2] == "color" and Players[pid].data.settings.staffRank > 0 then
 			if cmd[3] ~= nil and logicHandler.CheckPlayerValidity(pid, cmd[3]) then
 				if cmd[4] ~= nil then
+					local target = tonumber(cmd[3])
 					local newColor = cmd[4]
-					rpchat.setColor(tonumber(cmd[3]), newColor, pid)
+
+					rpchat.setColor(target, newColor, pid)
+					rpchat.systemMessage(pid, "You have changed %s name color to "..Players[target].data.customVariables.rpchat.color.."color", Players[target].name)
 				else
-					rpchat.systemMessage(pid, "Invalid color.")
+					local target = tonumber(cmd[3])
+					local oldColor = Players[target].data.customVariables.rpchat.color or #fff
+					rpchat.systemMessage(pid, "%s's name color is set to "..oldColor.."color", Players[target].name)
 				end
 			else
 				rpchat.systemMessage(pid, "Invalid PID.")
@@ -228,12 +246,12 @@ function rpchat.commandHandler(pid, cmd)
 		elseif cmd[2] == "toggleooc" and Players[pid].data.settings.staffRank > 0 then
 			if cmd[3] == "false" then
 				rpconfig.toggleOOC = false
-				rpchat.systemMessage(pid, "OOC has been turned off by staff.", true)
+				rpchat.globalMessage(pid, "OOC has been turned off by staff.")
 			elseif cmd[3] == "true" then
 				rpconfig.toggleOOC = true
-				rpchat.systemMessage(pid, "OOC has been turned on by staff.", true)
+				rpchat.globalMessage(pid, "OOC has been turned on by staff.")
 			else
-				rpchat.systemMessage(pid, "Argument has to be true/false. (OOC is set to "..tostring(rpconfig.toggleOOC)..")")
+				rpchat.systemMessage(pid, "Argument has to be true/false. (OOC is set to %s)", tostring(rpconfig.toggleOOC))
 			end
 
 		else
@@ -260,9 +278,9 @@ function rpchat.nickname(pid, cmd)
 
 			if nick:len() >= rpconfig.nickMinLen and nick:len() <= rpconfig.nickMaxLen then
 				Players[pid].data.customVariables.rpchat.nick = nick
-				rpchat.systemMessage(pid, "Your nickname as been set to: " .. nick)
+				rpchat.systemMessage(pid, "Your nickname as been set to: %s", nick)
 			else
-				rpchat.systemMessage(pid, "That nickname is incorrect. The max length allowed is " .. rpconfig.nickMaxLen)
+				rpchat.systemMessage(pid, "That nickname is incorrect. The max length allowed is %i", rpconfig.nickMaxLen)
 			end
 		else
 			Players[pid].data.customVariables.rpchat.nick = nil
@@ -372,7 +390,7 @@ customEventHooks.registerHandler("OnPlayerFinishLogin", rpchat.loginHandler)
 customEventHooks.registerHandler("OnPlayerEndCharGen", rpchat.loginHandler)
 
 customEventHooks.registerHandler("OnServerPostInit", function()
-	rpchat.log("RP-CHAT has been loaded successfully.")
+	rpchat.log("normal", "RP-CHAT has been loaded successfully.")
 end)
 
 customEventHooks.registerValidator("OnPlayerSendMessage", function(event, pid, message)

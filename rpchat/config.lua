@@ -3,7 +3,7 @@ local rpconfig = {}
 rpconfig.debug = true
 rpconfig.dataType = "json"
 
-rpconfig.toggleOOC = false
+rpconfig.toggleOOC = true
 
 rpconfig.enableNicks = true
 rpconfig.nickMinLen = 3
