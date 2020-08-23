@@ -1,13 +1,10 @@
--- MODIFIED BY JAKOB FOR USE WITH CUSTOM EVENT HANDLER
 
--- decorateHelp - Release 1 - For tes3mp v0.7.0 for Ecarlate server
+-- decorateHelp - Release 2 - For tes3mp v0.7.0-alpha
 -- Alter positions of items using a GUI
 
 --[[ INSTALLATION:
-1) Save this file as "decorateHelp.lua" in mp-stuff/scripts
-2) Add [ decorateHelp = require("decorateHelp") ] to customScripts.lua
-
-
+1) Save this file as "decorateHelp.lua" in server/scripts/custom
+2) Add [ decorateHelp = require("custom.decorateHelp") ] to customScripts.lua
 ]]
 
 ------
@@ -31,32 +28,31 @@ local function getObject(refIndex, cell)
 		return false
 	end
 
-	--if LoadedCells[cell]:ContainsObject(refIndex) then 
-	if LoadedCells[cell]:ContainsObject(refIndex) and refIndex ~= nil then
+	if LoadedCells[cell]:ContainsObject(refIndex) then
 		return LoadedCells[cell].data.objectData[refIndex]
 	else
 		return false
-	end	
+	end
 end
 
 local function resendPlaceToAll(refIndex, cell)
 	local object = getObject(refIndex, cell)
-	
+
 	if not object then
 		return false
 	end
-	
+
 	local refId = object.refId
 	local count = object.count or 1
 	local charge = object.charge or -1
 	local posX, posY, posZ = object.location.posX, object.location.posY, object.location.posZ
 	local rotX, rotY, rotZ = object.location.rotX, object.location.rotY, object.location.rotZ
 	local refIndex = refIndex
-	
+
 	local inventory = object.inventory or nil
-	
+
 	local splitIndex = refIndex:split("-")
-	
+
 	for pid, pdata in pairs(Players) do
 		if Players[pid]:IsLoggedIn() then
 			--First, delete the original
@@ -66,7 +62,7 @@ local function resendPlaceToAll(refIndex, cell)
 			tes3mp.SetObjectMpNum(splitIndex[2])
 			tes3mp.AddWorldObject() --?
 			tes3mp.SendObjectDelete()
-			
+
 			--Now remake it
 			tes3mp.InitializeEvent(pid)
 			tes3mp.SetEventCell(cell)
@@ -86,7 +82,7 @@ local function resendPlaceToAll(refIndex, cell)
 					tes3mp.AddContainerItem()
 				end
 			end
-			
+
 			tes3mp.AddWorldObject()
 			tes3mp.SendObjectPlace()
 			if inventory then
@@ -94,7 +90,7 @@ local function resendPlaceToAll(refIndex, cell)
 			end
 		end
 	end
-	
+
 	LoadedCells[cell]:Save() --Not needed, but it's nice to do anyways
 end
 
@@ -110,14 +106,14 @@ local function onEnterPrompt(pid, data)
 	local pname = tes3mp.GetName(pid)
 	local mode = playerCurrentMode[pname]
 	local data = tonumber(data) or 0
-	
+
 	local object = getObject(playerSelectedObject[pname], cell)
-	
+
 	if not object then
 		--The object no longer exists, so we should bail out now
 		return false
 	end
-	
+
 	if mode == "Rotate X" then
 		local curDegrees = math.deg(object.location.rotX)
 		local newDegrees = (curDegrees + data) % 360
@@ -149,10 +145,10 @@ local function onEnterPrompt(pid, data)
 	elseif mode == "Move South" then
 		object.location.posY = object.location.posY - 10
 	elseif mode == "return" then
-		object.location.posY = object.location.posY		
+		object.location.posY = object.location.posY
 		return
 	end
-	
+
 	resendPlaceToAll(playerSelectedObject[pname], cell)
 end
 
@@ -161,11 +157,11 @@ local function showMainGUI(pid)
 	local currentItem = "None" --default
 	local selected = playerSelectedObject[tes3mp.GetName(pid)]
 	local object = getObject(selected, tes3mp.GetCell(pid))
-	
+
 	if selected and object then --If they have an entry and it isn't gone
 		currentItem = object.refId .. " (" .. selected .. ")"
 	end
-	
+
 	local message = "Select an option. Your current item is: " .. currentItem
 	tes3mp.CustomMessageBox(pid, config.MainId, message, "Select Furniture;Fine Tune North;Fine Tune East;Fine Tune Height;Rotate X;Rotate Y;Rotate Z;Raise;Lower;Move East;Move West;Move North;Move South;Exit")
 end
@@ -181,17 +177,17 @@ end
 Methods.OnObjectPlace = function(pid, cellDescription)
 	--Get the last event, which should hopefully be the place packet
 	tes3mp.ReadLastEvent()
-	
+
 	--Get the refIndex of the first item in the object place packet (in theory, there should only by one)
 	local refIndex = tes3mp.GetObjectRefNumIndex(0) .. "-" .. tes3mp.GetObjectMpNum(0)
-	
+
 	--Record that item as the last one the player interacted with in this cell
 	setSelectedObject(pid, refIndex)
 end
 
 Methods.OnGUIAction = function(pid, idGui, data)
 	local pname = tes3mp.GetName(pid)
-	
+
 	if idGui == config.MainId then
 		if tonumber(data) == 0 then --View Furniture Emporium
 			playerCurrentMode[pname] = "Select Furniture"
@@ -223,28 +219,28 @@ Methods.OnGUIAction = function(pid, idGui, data)
 			return true
 		elseif tonumber(data) == 7 then --,Ascend
 			playerCurrentMode[pname] = "Raise"
-			onEnterPrompt(pid, 0)			
+			onEnterPrompt(pid, 0)
 			return true, showMainGUI(pid)
 		elseif tonumber(data) == 8 then --Descend
 			playerCurrentMode[pname] = "Lower"
-			onEnterPrompt(pid, 0)			
+			onEnterPrompt(pid, 0)
 			return true, showMainGUI(pid)
 		elseif tonumber(data) == 9 then --East
 			playerCurrentMode[pname] = "Move East"
-			onEnterPrompt(pid, 0)			
-			return true, showMainGUI(pid)	
+			onEnterPrompt(pid, 0)
+			return true, showMainGUI(pid)
 		elseif tonumber(data) == 10 then --West
 			playerCurrentMode[pname] = "Move West"
-			onEnterPrompt(pid, 0)			
+			onEnterPrompt(pid, 0)
 			return true, showMainGUI(pid)
 		elseif tonumber(data) == 11 then --North
 			playerCurrentMode[pname] = "Move North"
-			onEnterPrompt(pid, 0)			
+			onEnterPrompt(pid, 0)
 			return true, showMainGUI(pid)
 		elseif tonumber(data) == 12 then --South
 			playerCurrentMode[pname] = "Move South"
 			onEnterPrompt(pid, 0)
-			return true, showMainGUI(pid)			
+			return true, showMainGUI(pid)
 		elseif tonumber(data) == 13 then --Close
 			--Do nothing
 			return true
@@ -253,7 +249,7 @@ Methods.OnGUIAction = function(pid, idGui, data)
 		if data ~= nil and data ~= "" and tonumber(data) then
 			onEnterPrompt(pid, data)
 		end
-		
+
 		playerCurrentMode[tes3mp.GetName(pid)] = nil
 		return true, showMainGUI(pid)
 	end
@@ -282,8 +278,5 @@ end)
 customEventHooks.registerHandler("OnPlayerCellChange", function(eventStatus, pid, previousCellDescription, currentCellDescription)
 	decorateHelp.OnPlayerCellChange(pid)
 end)
-
---OnPlayerCellChange
-
 
 return Methods
