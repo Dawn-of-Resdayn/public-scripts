@@ -8,19 +8,23 @@ These are a list of open-source scripts that are in server.\
 * betterBans - ``Created by Nac - https://github.com/nalal`` - ``In-Active``
 * brewingMod - ``Created by ReinhartXIV`` - ``In-Active``
 * mysqlHandler - ``Created by Nac - https://github.com/nalal`` - ``In-Active``
+* objectBlacklist - ``Created by SaintWish - https://github.com/SaintWish`` - ``In-Active``
 * FossMail - ``Created by TeamFoss - https://github.com/TES3MP-TeamFOSS/Scripts`` - ``Active``
-* jrpStatus - ``Created by jrp malic - https://gitlab.com/rendeko/tes3mp-scripts`` - ``Active``
 * kanaHousing - ``Created by Atkana - https://github.com/Atkana/tes3mp-scripts`` - ``Active``
-* kanaFurniture - ``Created by Atkana - https://github.com/Atkana/tes3mp-scripts`` - ``Active``
 * cellReset - ``Created by Atkana - https://github.com/Atkana/tes3mp-scripts`` - ``Active``
 * rpRolls - ``Created by David-AW - https://github.com/David-AW`` - ``Active``
-* stuck - ``Created by Nac - https://github.com/nalal`` - ``Active``
-* DiscordRelay - ``Created by Hotaru - https://github.com/HotaruBlaze/TES3MP_DiscordRelay`` - ``Active``
-* objectBlacklist - ``Created by SaintWish - https://github.com/SaintWish`` - ``Active``
+* playerUtils - ``Created by SaintWish - https://github.com/SaintWish`` - ``Active``
+* rpStatus - ``Created by SaintWish - https://github.com/SaintWish`` - ``Active``
 
 Modified
 ======
 Scripts that were modified by us for DoR.
 * rpchat
-  * ``Created by Created by Nac - https://github.com/Atkana/tes3mp-scripts``
-  * ``Modified by SaintWish - https://github.com/SaintWish``
+  * ``Created by Created by Nac - https://github.com/nalal``
+  * ``Added nickname feature and heavily optimized the code``
+* kanaFurniture
+  * ``Created by Atkana - https://github.com/Atkana/tes3mp-scripts``
+  * ``Added admin shop for admin only furniture.``
+* DiscordRelay
+  * ``Created by Hotaru - https://github.com/HotaruBlaze/TES3MP_DiscordRelay``
+  * ``Redid config code to remove dependency, added hook to notify if player leaves/joins server, and cleaned up the code a bit for better readability``
